@@ -1,7 +1,6 @@
 <?php
+$querySetting = mysqli_query($koneksi, "SELECT * FROM setting ORDER BY id DESC");
 if (isset($_POST['simpan'])) {
-    // print_r($_POST);
-    // die;
     $email_website = $_POST['email_website'];
     $no_tlp_website = $_POST['no_tlp_website'];
     $alamat_website = $_POST['alamat_website'];
@@ -9,52 +8,74 @@ if (isset($_POST['simpan'])) {
     $twitter = $_POST['twitter'];
     $fb = $_POST['fb'];
     $linkedin = $_POST['linkedin'];
+    // $logo = $_POST['logo'];                    
 
-    $querySetting = mysqli_query($koneksi, "SELECT * FROM setting ORDER BY id DESC");
     if (mysqli_num_rows($querySetting) > 0) {
-        //updated
-
+        // update
+        $id = mysqli_insert_id($koneksi);
+        $update = mysqli_query($koneksi, "UPDATE setting SET email_website = '$email_website', no_tlp_website = '$no_tlp_website', alamat_website = '$alamat_website', ig = '$ig', twitter = '$twitter', fb = '$fb', linkedin = '$linkedin' WHERE id = '7'");
+        header("location:?pg=setting&edit=berhasil");
     } else {
-        //insert
-        $insert = mysqli_query($koneksi, "INSERT INTO setting (email_website, no_tlp_website, alamat_website, ig, twitter, fb, linkedin)
-        VALUES ('$email_website','$no_tlp_website','$alamat_website','$ig','$twitter','$fb','$linkedin')");
+        // insert
+        $insert = mysqli_query($koneksi, "INSERT INTO setting (email_website, no_tlp_website, alamat_website, ig, twitter, fb, linkedin) VALUES ('$email_website', '$no_tlp_website','$alamat_website', '$ig', '$twitter', '$fb', '$linkedin')");
+        header("location:?pg=setting&tambah=berhasil");
     }
 }
+$rowSetting = mysqli_fetch_assoc($querySetting);
 ?>
+
 <form action="" method="post" enctype="multipart/form-data">
+    <!-- Email Start -->
     <div class="mb-3">
-        <label for="">Email Website</label>
-        <input type="email" class="form-control" name="email_website" placeholder="Email Website">
+        <label for="">Email</label>
+        <input value="<?= $rowSetting['email_website'] ?>" type="email" class="form-control" name="email_website" placeholder="Email Website" id="">
     </div>
+
+    <!-- No tlp Start -->
     <div class="mb-3">
-        <label for="">Telepon Website</label>
-        <input type="text" class="form-control" name="no_tlp_website" placeholder="No Telepon Website">
+        <label for="">No tlp</label>
+        <input value="<?= $rowSetting['no_tlp_website'] ?>" type="number" class="form-control" name="no_tlp_website" placeholder="No tlpon Website" id="">
     </div>
+
+    <!-- Instagram -->
+    <div class="mb-3">
+        <label for="">Instagram</label>
+        <input value="<?= $rowSetting['ig'] ?>" type="url" class="form-control" name="ig" placeholder="Instagram Link" id="">
+    </div>
+
+    <!-- Twitter -->
+    <div class="mb-3">
+        <label for="">Twitter</label>
+        <input value="<?= $rowSetting['twitter'] ?>" type="url" class="form-control" name="twitter" placeholder="Twitter Link" id="">
+    </div>
+
+    <!-- Facebook -->
+    <div class="mb-3">
+        <label for="">Facebook</label>
+        <input value="<?= $rowSetting['fb'] ?>" type="url" class="form-control" name="fb" placeholder="Facebook Link" id="">
+    </div>
+
+    <!-- Linkedin -->
+    <div class="mb-3">
+        <label for="">Linkedin</label>
+        <input value="<?= $rowSetting['linkedin'] ?>" type="url" class="form-control" name="linkedin" placeholder="Linkedin Link" id="">
+    </div>
+
+    <!-- Alamat -->
     <div class="mb-3">
         <label for="">Alamat</label>
-        <textarea id="" class="form-control" name="alamat_website" placeholder="Alamat Website"></textarea>
+        <textarea name="alamat_website" class="form-control" id=""><?= $rowSetting['alamat_website'] ?></textarea>
     </div>
-    <div class="mb-3">
-        <label for="">Instagram Link</label>
-        <input type="text" class="form-control" name="ig" placeholder="Instagram Link">
-    </div>
-    <div class="mb-3">
-        <label for="">Facebook Link</label>
-        <input type="url" class="form-control" name="fb" placeholder="Facebook Link">
-    </div>
-    <div class="mb-3">
-        <label for="">Twitter Link</label>
-        <input type="url" class="form-control" name="twitter" placeholder="Twitter Link">
-    </div>
-    <div class="mb-3">
-        <label for="">LinkedIn</label>
-        <input type="url" class="form-control" name="linkedin" placeholder="LinkedIn">
-    </div>
+
+    <!-- Logo -->
     <div class="mb-3">
         <label for="">Logo</label>
-        <input type="file" name="logo" </div>
-        <div class="mb-3">
+        <input value="<?= $rowSetting['logo'] ?>" type="file" name="logo" placeholder="Logo" id="">
+    </div>
 
-            <input type="submit" class="btn-btn-primary" name="simpan" value="Simpan">
-        </div>
+    <!-- Button Submit -->
+    <div class="mb-3">
+        <input type="submit" class="btn btn-primary" name="simpan" value="Simpan">
+        <a href="?pg=setting">Kembali</a>
+    </div>
 </form>
